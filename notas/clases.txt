@@ -1,0 +1,39 @@
+=============================
+CLASE: PASAJERO
+=============================
+ID_Pasajero
+Nombre
+Apellido
+Genero
+Edad
+Nacionalidad
+
+
+=============================
+CLASE: AEROPUERTO
+=============================
+ID_Aeropuerto
+Nombre_Aeropuerto
+Codigo_Pais
+Pais
+Continente
+
+
+=============================
+CLASE: PILOTO
+=============================
+ID_Piloto
+Nombre_Piloto
+Nacionalidad
+Anios_Experiencia
+
+
+=============================
+CLASE: VUELO
+=============================
+ID_Vuelo
+Aeropuerto_Salida
+Aeropuerto_Llegada
+Fecha_Salida
+ID_Piloto
+Estado_Vuelo

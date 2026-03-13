@@ -1,0 +1,11 @@
+# Dependencias Opcionales para Análisis e IA
+# Instalación: pip install -r requirements-dev.txt
+
+# Incluye todas las dependencias principales
+-r requirements.txt
+
+# Machine Learning (opcional)
+scikit-learn==1.3.0
+
+# Visualización de datos (opcional)
+matplotlib==3.7.2
