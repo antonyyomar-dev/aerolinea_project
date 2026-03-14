@@ -102,17 +102,17 @@ def main():
                 if opcion == 7:
                     break
                 if opcion == 1:
-                    pass
+                    p.registrar_piloto()
                 if opcion == 2:
-                    pass
+                    p.mostrar_pilotos()
                 if opcion == 3:
-                    pass
+                    p.buscar_piloto_por_id()
                 if opcion == 4:
-                    pass
+                    p.buscar_piloto_por_nombre()
                 if opcion == 5:
-                    pass
+                    p.actualizar_piloto()
                 if opcion == 6:
-                    pass
+                    p.eliminar_piloto()
         
         if opcion == 4:
             limpiar_pantalla()
@@ -131,19 +131,19 @@ def main():
                 if opcion == 8:
                     break
                 if opcion == 1:
-                    pass
+                    v.registrar_vuelo()
                 if opcion == 2:
-                    pass
+                    v.mostrar_vuelos()
                 if opcion == 3:
-                    pass
+                    v.buscar_vuelo_por_id()
                 if opcion == 4:
-                    pass
+                    v.buscar_vuelos_por_aeropuerto_salida()
                 if opcion == 5:
-                    pass
+                    v.buscar_vuelos_por_piloto()
                 if opcion == 6:
-                    pass
+                    v.actualizar_estado_vuelo()
                 if opcion == 7:
-                    pass
+                    v.eliminar_vuelo()
         
         if opcion == 5:
             limpiar_pantalla()
@@ -152,28 +152,25 @@ def main():
                     try:
                         m.menu_reportes()
                         opcion = int(input("Seleccione una opción: "))
-                        if 1<= opcion <= 7:
+                        if 1<= opcion <= 6:
                             break 
                         else:
                             print("Opcion invalida")
                     except ValueError:
                         print("Error en ek ingreso de datos")
                 
-                if opcion == 7:
+                if opcion == 6:
                     break
                 if opcion == 1:
-                    pass
+                    r.total_pasaheros_registrados()
                 if opcion == 2:
-                    pass
+                    r.total_pilotos()
                 if opcion == 3:
-                    pass
+                    r.total_aeropuertos()
                 if opcion == 4:
-                    pass
+                    r.total_vuelos()
                 if opcion == 5:
-                    pass
-                if opcion == 6:
-                    pass
-    
+                    r.reporte_vuelos_por_estado()
 
 if __name__ == "__main__":
     main()

@@ -51,7 +51,7 @@ def registrar_pasajero ():
             
     while True:
         try:
-            nombre = input("Ingrese el nombre del pasajero: ")
+            nombre = input("Ingrese solo el nombre del pasajero: ")
             if not contiene_numeros(nombre):
                 break
             else:
@@ -61,7 +61,7 @@ def registrar_pasajero ():
 
     while True:
         try:
-            apellido = input("Ingrese el apellido del pasajero: ")
+            apellido = input("Ingrese solo el apellido del pasajero: ")
             if not contiene_numeros(apellido):
                 break
             else:  
@@ -113,9 +113,17 @@ def registrar_pasajero ():
     
 
 def mostrar_pasajeros ():
-    cabezales = ["ID_Pasajero", "Nombre", "Apellido", "Genero", "Edad", "Nacionalidad"]
-    print(tabulate(data_pasajeros, headers=cabezales, tablefmt="grid"))
-          
+    if data_pasajeros.empty:
+        print()
+        print("--"*30)
+        print("No hay pasajeros registrados")
+        print("--"*30)
+        print()
+        return
+    else:
+        cabezales = ["ID_Pasajero", "Nombre", "Apellido", "Genero", "Edad", "Nacionalidad"]
+        print(tabulate(data_pasajeros, headers=cabezales, tablefmt="grid"))
+            
 def buscar_pasajero_por_id ():
     while True:
         try:
@@ -139,7 +147,7 @@ def buscar_pasajero_por_id ():
 def buscar_pasajero_por_nombre ():
     while True:
         try:
-            nombre = input("Ingrese el nombre del pasajero: ")
+            nombre = input("Ingrese solo el nombre del pasajero: ")
             if not contiene_numeros(nombre):
                 break
             else:
@@ -147,11 +155,18 @@ def buscar_pasajero_por_nombre ():
         except ValueError:
             print("Error en el ingreso de datos")
 
-    print("--"*30)
+    econtrado = None
     for _, row in data_pasajeros.iterrows():
         if row["Nombre"] == nombre:
-            print(row)
-    print("--"*30)
+            encontrado = row
+            break
+    
+    if encontrado is None:
+        print("Pasajero no encontrado")
+    else:
+        print("--"*30)
+        print(encontrado)
+        print("--"*30)
     print()
 
 def actualizar_pasajero ():

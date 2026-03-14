@@ -3,6 +3,7 @@ from data import logica_data as ld
 from tabulate import tabulate
 import pandas as pd
 from services import pasajero_service as ps
+from data import base_paises as bp
 
 # Carga de data
 data_aeropuertos = ld.cargar_aeropuertos()
@@ -27,51 +28,16 @@ def guardar_aeropuerto(a):
 
 # utilidad para códigos de país
 
-def obtener_codigos_paises():
-    """Devuelve diccionario {abreviatura: nombre} con países de LATAM, ASIA y EUROPA."""
-    return {
-        # Latinoamérica
-        "AR": "Argentina", "BO": "Bolivia", "BR": "Brasil", "CL": "Chile",
-        "CO": "Colombia", "CR": "Costa Rica", "CU": "Cuba", "DO": "República Dominicana",
-        "EC": "Ecuador", "SV": "El Salvador", "GT": "Guatemala", "HN": "Honduras",
-        "MX": "México", "NI": "Nicaragua", "PA": "Panamá", "PY": "Paraguay",
-        "PE": "Perú", "PR": "Puerto Rico", "UY": "Uruguay", "VE": "Venezuela",
-        # Asia
-        "AF": "Afganistán", "AM": "Armenia", "AZ": "Azerbaiyán", "BH": "Baréin",
-        "BD": "Bangladesh", "BT": "Bután", "BN": "Brunéi", "KH": "Camboya",
-        "CN": "China", "CY": "Chipre", "GE": "Georgia", "IN": "India",
-        "ID": "Indonesia", "IR": "Irán", "IQ": "Irak", "IL": "Israel",
-        "JP": "Japón", "JO": "Jordania", "KZ": "Kazajistán", "KW": "Kuwait",
-        "KG": "Kirguistán", "LA": "Laos", "LB": "Líbano", "MY": "Malasia",
-        "MV": "Maldivas", "MN": "Mongolia", "MM": "Myanmar", "NP": "Nepal",
-        "KP": "Corea del Norte", "KR": "Corea del Sur", "OM": "Omán", "PK": "Pakistán",
-        "PS": "Palestina", "PH": "Filipinas", "QA": "Qatar", "SA": "Arabia Saudita",
-        "SG": "Singapur", "LK": "Sri Lanka", "SY": "Siria", "TJ": "Tayikistán",
-        "TH": "Tailandia", "TL": "Timor Oriental", "TR": "Turquía", "TM": "Turkmenistán",
-        "AE": "Emiratos Árabes Unidos", "UZ": "Uzbekistán", "VN": "Vietnam", "YE": "Yemen",
-        # Europa
-        "AL": "Albania", "AD": "Andorra", "AT": "Austria", "BY": "Bielorrusia",
-        "BE": "Bélgica", "BA": "Bosnia y Herzegovina", "BG": "Bulgaria", "HR": "Croacia",
-        "CZ": "Chequia", "DK": "Dinamarca", "EE": "Estonia", "FI": "Finlandia",
-        "FR": "Francia", "DE": "Alemania", "GR": "Grecia", "HU": "Hungría",
-        "IS": "Islandia", "IE": "Irlanda", "IT": "Italia", "LV": "Letonia",
-        "LI": "Liechtenstein", "LT": "Lituania", "LU": "Luxemburgo", "MT": "Malta",
-        "MD": "Moldavia", "MC": "Mónaco", "ME": "Montenegro", "NL": "Países Bajos",
-        "MK": "Macedonia del Norte", "NO": "Noruega", "PL": "Polonia", "PT": "Portugal",
-        "RO": "Rumanía", "RU": "Rusia", "SM": "San Marino", "RS": "Serbia",
-        "SK": "Eslovaquia", "SI": "Eslovenia", "ES": "España", "SE": "Suecia",
-        "CH": "Suiza", "UA": "Ucrania", "GB": "Reino Unido", "VA": "Ciudad del Vaticano"
-    }
 
 
 def mostrar_codigos_paises():
-    info = obtener_codigos_paises()
+    info = bp.obtener_codigos_paises()
     tabla = [[code, name] for code, name in info.items()]
     print(tabulate(tabla, headers=["Código", "País"], tablefmt="grid"))
 
 def lista_codigos_paises():
     """Devuelve lista de abreviaturas de países disponibles."""
-    return list(obtener_codigos_paises().keys())
+    return list(bp.obtener_codigos_paises().keys())
 
 def verificar_continente(continente):
     continentes = ["America", "Asia", "Europa", "Africa"]
@@ -81,65 +47,55 @@ def verificar_continente(continente):
     return False
 
 def registrar_aeropuerto ():
+    # Validar ID: patrón AP + 3 dígitos (ej. AP001)
     while True:
-        try:
-            print("Formato de ID: AP001")
-            id_aeropuerto = input("Ingrese el ID del aeropuerto: ").upper()
-            if id_aeropuerto.startswith("AP00") and not existe_aeropuerto(id_aeropuerto):
-                break
-            else:
-                print("El ID del aeropuerto es invalido")
-        except ValueError:
-            print("Error en el ingreso de datos")
+        print("Formato de ID: AP...1")
+        id_aeropuerto = input("Ingrese el ID del aeropuerto: ").strip().upper()
+        if (len(id_aeropuerto) == 6
+            and id_aeropuerto.startswith("AP")
+            and id_aeropuerto[2:].isdigit()
+            and not existe_aeropuerto(id_aeropuerto)
+        ):
+            break
+        print("El ID del aeropuerto es inválido o ya existe")
     
+    # Nombre sin números y no vacío
     while True:
-        try:
-            nombre_aeropuerto = input("Ingrese el nombre del aeropuerto: ")
-            if not ps.contiene_numeros(nombre_aeropuerto):
-                break 
-            else:
-                print("El nombre no debe contener numeros")
-        except ValueError:
-            print("Error en el ingreso de datos")
+        nombre_aeropuerto = input("Ingrese el nombre del aeropuerto: ").strip()
+        if nombre_aeropuerto and not ps.contiene_numeros(nombre_aeropuerto):
+            break
+        print("El nombre no debe contener números ni estar vacío")
     
+    # País sin números y no vacío
     while True:
-        try:
-            pais = input("Ingrese el pais del aeropuerto: ")
-            if not ps.contiene_numeros(pais):
-                break 
-            else:
-                print("El pais no debe contener numeros")
-        except ValueError:
-            print("Error en el ingreso de datos")
+        pais = input("Ingrese el país del aeropuerto: ").strip()
+        if pais and not ps.contiene_numeros(pais):
+            break
+        print("El país no debe contener números ni estar vacío")
     
-    
-    
-    # obtener solo las abreviaturas
-    for clave, valor in obtener_codigos_paises().items():
-        if valor == pais:
+    # Resolver código de país (ISO2) a partir del nombre; si no existe, pedir manual
+    codigo_pais = None
+    paises = bp.obtener_codigos_paises()
+    for clave, valor in paises.items():
+        if valor.lower() == pais.lower():
             codigo_pais = clave
             break
-        else:
-            print("El pais no es valido")
-            while True:
-                cod = input("Ingrese el codigo de forma manual (3 Caracteres): ")
-                if  len(cod) == 3:
-                    codigo_pais = cod
-                    break 
-                else:
-                    print("El codigo no debe ser de 3 caracteres")
     
-            break 
-    
+    if codigo_pais is None:
+        print("El país no está en el catálogo, ingrese el código manual (2 letras)")
+        while True:
+            cod = input("Código de país (ej. PE): ").strip().upper()
+            if len(cod) == 2 or len(cod) == 3 and cod.isalpha():
+                codigo_pais = cod
+                break
+            print("El código debe tener exactamente 2 letras")
+
+    # Continente válido
     while True:
-        try:
-            continente = input("Ingrese el continente del aeropuerto: ")
-            if not ps.contiene_numeros(continente) and verificar_continente(continente):
-                break 
-            else:
-                print("El continente no es valido")
-        except ValueError:
-            print("Error en el ingreso de datos")
+        continente = input("Ingrese el continente del aeropuerto: ").strip()
+        if continente and not ps.contiene_numeros(continente) and verificar_continente(continente):
+            break
+        print("El continente no es válido")
     
     cont = a.Aeropuerto(id_aeropuerto, nombre_aeropuerto, codigo_pais, pais, continente)
     guardar_aeropuerto(cont)
@@ -148,18 +104,28 @@ def registrar_aeropuerto ():
     print(f"Aeropuerto {nombre_aeropuerto} registrado correctamente")
     print("--"*30)
     print()
-    
 
 def mostrar_aeropuertos ():
-    cabezales = ["ID_Aeropuerto", "Nombre_Aeropuerto", "Pais", "Codigo_Pais", "Continente"]
-    print(tabulate(data_aeropuertos, headers=cabezales, tablefmt="grid"))
+    if data_aeropuertos.empty:
+        print()
+        print("--"*30)
+        print("No hay aeropuertos registrados")
+        print("--"*30)
+        print()
+        return
+    else:
+        cabezales = ["ID_Aeropuerto", "Nombre_Aeropuerto", "Pais", "Codigo_Pais", "Continente"]
+        print(tabulate(data_aeropuertos, headers=cabezales, tablefmt="grid"))
 
 def buscar_aeropuerto_por_id ():
     while True:
         try:
-            print("Formato de ID: AP001")
-            id_aeropuerto = input("Ingrese el ID del aeropuerto a buscar: ").upper()
-            if id_aeropuerto.startswith("AP00") and  existe_aeropuerto(id_aeropuerto):
+            print("Formato de ID: AP...1")
+            id_aeropuerto = input("Ingrese el ID del aeropuerto a buscar: ").strip().upper()
+            if (len(id_aeropuerto) == 6 and
+                id_aeropuerto.startswith("AP") and  
+                id_aeropuerto[2:].isdigit() and
+                existe_aeropuerto(id_aeropuerto)):
                 break
             else:
                 print("El ID del aeropuerto es invalido")
@@ -200,14 +166,126 @@ def buscar_aeropuerto_por_pais ():
 
 
 def actualizar_aeropuerto ():
-    pass 
+    while True:
+        print()
+        print("--"*30)
+        print("Actualizar aeropuerto ... ")
+        print("1. Actualizar nombre")
+        print("2. Actualizar pais")
+        print("3. Actualizar continente")
+        print("4. Volver al menú principal")
+        print("--"*30)
+        print()
+        
+        while True:
+            try:
+                opcion = int(input("Ingrese una opción: "))
+                if 1<= opcion <= 4:
+                    break
+                else:
+                    print("La opción no es valida")
+            except ValueError:
+                print("Error en el ingreso de datos")
+        
+        if opcion == 4:
+            break
+        
+        while True:
+            try:
+                print("Formato de ID: AP001")
+                id_aeropuerto = input("Ingrese el ID del aeropuerto: ").upper()
+                if (len(id_aeropuerto) == 6 and 
+                    id_aeropuerto.startswith("AP")and 
+                    id_aeropuerto[2:].isdigit() and 
+                    existe_aeropuerto(id_aeropuerto)):
+                    break
+                
+                else:
+                    print("El ID del aeropuerto es invalido")
+            except ValueError:
+                print("Error en el ingreso de datos")
+
+        if not existe_aeropuerto(id_aeropuerto):
+            print("El aeropuerto no esta registrado")
+            return 
+        
+        if opcion == 1:
+            while True:
+                try:
+                    nombre_aeropuerto = input("Ingrese el nuevo nombre del aeropuerto: ")
+                    if not ps.contiene_numeros(nombre_aeropuerto):
+                        break 
+                    else:
+                        print("El nombre no debe contener numeros")
+                except ValueError:
+                    print("Error en el ingreso de datos")
+
+            for _, row in data_aeropuertos.iterrows():
+                if row["ID_Aeropuerto"] == id_aeropuerto:
+                    data_aeropuertos.at[row.name, "Nombre_Aeropuerto"] = nombre_aeropuerto
+                    ld.guardar_aeropuertos(data_aeropuertos)
+                    break
+                
+            print("--"*30)
+            print(f"Aeropuerto {id_aeropuerto} actualizado correctamente")
+            print("--"*30)
+            print()
+        
+        if opcion == 2:
+            while True:
+                try:
+                    pais = input("Ingrese el pais del aeropuerto: ")
+                    if not ps.contiene_numeros(pais):
+                        break 
+                    else:
+                        print("El pais no debe contener numeros")
+                except ValueError:
+                    print("Error en el ingreso de datos")
+            
+            for _, row in data_aeropuertos.iterrows():
+                if row["ID_Aeropuerto"] == id_aeropuerto:
+                    data_aeropuertos.at[row.name, "Pais"] = pais
+                    ld.guardar_aeropuertos(data_aeropuertos)
+                    break
+                
+            print("--"*30)
+            print(f"Aeropuerto {id_aeropuerto} actualizado correctamente")
+            print("--"*30)
+            print()
+    
+        if opcion == 3:
+            while True:
+                try:
+                    continente = input("Ingrese el continente del aeropuerto: ")
+                    if not ps.contiene_numeros(continente) and verificar_continente(continente):
+                        break 
+                    else:
+                        print("El continente no es valido")
+                except ValueError:
+                    print("Error en el ingreso de datos")
+            
+            for _, row in data_aeropuertos.iterrows():
+                if row["ID_Aeropuerto"] == id_aeropuerto:
+                    data_aeropuertos.at[row.name, "Continente"] = continente
+                    ld.guardar_aeropuertos(data_aeropuertos)
+                    break
+                        
+            print("--"*30)
+            print(f"Aeropuerto {id_aeropuerto} actualizado correctamente")
+            print("--"*30)
+            print()
+    
+            
 
 def eliminar_aeropuerto ():
     while True:
         try:
             print("Formato de ID: AP001")
             id_aeropuerto = input("Ingrese el ID del aeropuerto: ").upper()
-            if id_aeropuerto.startswith("AP00"): 
+            if (len(id_aeropuerto) == 6 and 
+                id_aeropuerto.startswith("AP") and 
+                id_aeropuerto[2:].isdigit()
+                and existe_aeropuerto(id_aeropuerto)): 
                 break
             else:
                 print("El ID del aeropuerto es invalido")
@@ -232,6 +310,6 @@ def eliminar_aeropuerto ():
     
     
     # Notas 
-    # Verificar que los codigos y paises se validen correctamente 
-    # Implementar la función actualizar
+    # Verificar que los codigos y paises se validen correctamente x 
+    # Implementar la función actualizar x 
     
